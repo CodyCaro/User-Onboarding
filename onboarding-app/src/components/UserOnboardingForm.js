@@ -5,6 +5,7 @@ import axios from "axios";
 
 function UserOnboardingForm({ errors, touched, values, status }) {
   const [users, setUsers] = useState([]);
+
   return (
     <div>
       <Form>
@@ -14,24 +15,30 @@ function UserOnboardingForm({ errors, touched, values, status }) {
           name="name"
           placeholder="Enter Name"
         />
+        {touched.name && errors.name && <p>{errors.name}</p>}
         <Field
           component="input"
           type="email"
           name="email"
           placeholder="Enter Email"
         />
+        {touched.email && errors.email && <p>{errors.email}</p>}
         <Field
           component="input"
           type="password"
           name="password"
           placeholder="Enter Password"
         />
+        {touched.password && errors.password && <p>{errors.password}</p>}
         <label>Terms Of Service</label>
         <Field
           type="checkbox"
           name="termsOfService"
           checked={values.termsOfService}
         />
+        {touched.termsOfService && errors.termsOfService && (
+          <p>{errors.termsOfService}</p>
+        )}
         <button>Submit</button>
       </Form>
     </div>
@@ -48,9 +55,22 @@ const formikHOC = withFormik({
     };
   },
   validationSchema: Yup.object().shape({
-    species: Yup.string().required("not a good input"),
-    size: Yup.number().required(),
-    notes: Yup.string()
+    name: Yup.string()
+      .required("Please enter your name.")
+      .matches(
+        /^[A-Za-z ]+$/,
+        "Must not contain numbers or special characters!"
+      ),
+    email: Yup.string()
+      .required("Please enter an email")
+      .email(),
+    password: Yup.string()
+      .required("Must enter a password")
+      .min(5, "Must be 5 characters long!"),
+    termsOfService: Yup.boolean().oneOf(
+      [true],
+      "Must Accept Terms and Conditions"
+    )
   }),
   handleSubmit(values, { setStatus, resetForm }) {
     axios
