@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Field, withFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 
 function UserOnboardingForm({ errors, touched, values, status }) {
   const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    if (status) {
+      setUsers([...users, status]);
+    }
+  }, [status]);
 
   return (
     <div>
@@ -41,6 +47,18 @@ function UserOnboardingForm({ errors, touched, values, status }) {
         )}
         <button type="submit">Submit</button>
       </Form>
+
+      {users.map(user => (
+        <div key={user.id}>
+          <h2>{user.name}</h2>
+          <h3>{user.email}</h3>
+          <p>password is: "{user.password}" Ooops security breach!</p>
+          <p>
+            {user.termsOfService} You have accepted the terms... did you read
+            them?
+          </p>
+        </div>
+      ))}
     </div>
   );
 }
