@@ -39,7 +39,7 @@ function UserOnboardingForm({ errors, touched, values, status }) {
         {touched.termsOfService && errors.termsOfService && (
           <p>{errors.termsOfService}</p>
         )}
-        <button>Submit</button>
+        <button type="submit">Submit</button>
       </Form>
     </div>
   );
@@ -72,6 +72,7 @@ const formikHOC = withFormik({
       "Must Accept Terms and Conditions"
     )
   }),
+
   handleSubmit(values, { setStatus, resetForm }) {
     axios
       .post("https://reqres.in/api/users", values)
